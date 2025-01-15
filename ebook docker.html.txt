@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPUB Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #epub-container {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            border: 1px solid #ddd;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+        }
+        button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+</head>
+<body>
+    <div id="controls">
+        <label for="file-input">
+            <button>Upload EPUB</button>
+        </label>
+        <input type="file" id="file-input" accept=".epub">
+        <button id="prev-btn">Previous</button>
+        <button id="next-btn">Next</button>
+    </div>
+    <div id="epub-container"></div>
+
+    <script>
+        const inputFile = document.getElementById('file-input');
+        const epubContainer = document.getElementById('epub-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let rendition;
+
+        inputFile.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const fileReader = new FileReader();
+                fileReader.onload = (e) => {
+                    const book = ePub(e.target.result);
+                    rendition = book.renderTo(epubContainer, {
+                        width: '100%',
+                        height: '100vh'
+                    });
+                    rendition.display();
+                };
+                fileReader.readAsArrayBuffer(file);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (rendition) rendition.prev();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (rendition) rendition.next();
+        });
+    </script>
+</body>
+</html>

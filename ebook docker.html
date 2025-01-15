@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPUB Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #epub-container {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            border: 1px solid #ddd;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+        }
+        button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+</head>
+<body>
+    <div id="controls">
+        <button id="prev-btn">Previous</button>
+        <button id="next-btn">Next</button>
+    </div>
+    <div id="epub-container"></div>
+
+    <script>
+        const epubContainer = document.getElementById('epub-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let rendition;
+
+        // Load a static EPUB file
+        const staticFileUrl = 'ebook\Introduction-to-Docker-A-Beginner_s-Guide.epub';
+        const book = ePub(staticFileUrl);
+        rendition = book.renderTo(epubContainer, {
+            width: '100%',
+            height: '100vh'
+        });
+        rendition.display();
+
+        prevBtn.addEventListener('click', () => {
+            if (rendition) rendition.prev();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (rendition) rendition.next();
+        });
+    </script>
+</body>
+</html>
